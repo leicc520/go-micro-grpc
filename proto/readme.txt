@@ -1,0 +1,1 @@
+protoc.exe --go_out=plugins=grpc:. ./proto/go.grpc.srv.*.proto

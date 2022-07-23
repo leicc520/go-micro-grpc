@@ -1,0 +1,33 @@
+syntax = "proto3";
+package proto;
+option go_package = "./proto";
+service GrpcCoreService {
+    rpc GetId(GrpcGetIdRequest) returns (GrpcGetIdResponse) {}
+    rpc GetIds(GrpcGetIdsRequest) returns (GrpcGetIdsResponse) {}
+	rpc Health(GrpcHealthRequest) returns (GrpcHealthResponse) {}
+}
+
+message GrpcGetIdsRequest {
+    int64 Nums = 1;
+    int64 DataCenterId = 2;
+}
+
+message GrpcGetIdsResponse {
+    repeated int64 Id = 1;
+}
+
+message GrpcGetIdRequest {
+    int64 DataCenterId = 1;
+}
+
+message GrpcGetIdResponse {
+    int64 Id = 1;
+}
+
+message GrpcHealthRequest {
+}
+
+message GrpcHealthResponse {
+    int64 Code = 1;
+    string Msg = 2;
+}
