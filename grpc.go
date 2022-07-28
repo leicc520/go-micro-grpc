@@ -1,7 +1,6 @@
 package micro
 
 import (
-	"github.com/leicc520/go-orm"
 	"net"
 	"os"
 	"os/signal"
@@ -10,14 +9,15 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/leicc520/go-core/proto"
+	"github.com/leicc520/go-micro-grpc/proto"
+	"github.com/leicc520/go-orm"
 	"github.com/leicc520/go-orm/log"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 )
 
-const _GRPCPROTO_ = "grpc"
+const _PROTO_ = "grpc"
 
 type RegisterGrpcServiceHandler func(s *grpc.Server)
 type GRPCServiceSrv struct {
@@ -77,7 +77,7 @@ func (g *GRPCServiceSrv) Register(handle RegisterGrpcServiceHandler)  {
 //服务启动失败的情况注销服务
 func (g *GRPCServiceSrv) UnRegister()  {
 	if g.msrv != nil && strings.HasPrefix(g.msrv.RegSrv, "http") {
-		g.msrv.UnRegister(_GRPCPROTO_, g.name, g.srv)
+		g.msrv.UnRegister(_PROTO_, g.name, g.srv)
 	}
 }
 
@@ -103,7 +103,7 @@ func (g *GRPCServiceSrv) Start(port int64) error  {
 	if g.msrv != nil && strings.HasPrefix(g.msrv.RegSrv, "http") {
 		time.AfterFunc(time.Second, func() {//服务注册延迟处理 延迟注册上报服务
 			g.srv = strconv.FormatInt(g.port, 10)
-			g.srv = g.msrv.Register(g.name, g.srv, _GRPCPROTO_,  g.version)
+			g.srv = g.msrv.Register(g.name, g.srv, _PROTO_,  g.version)
 		})
 	}
 	//监听服务器kill 命令 重启服务
