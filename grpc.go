@@ -81,6 +81,23 @@ func (g *GRPCServiceSrv) UnRegister()  {
 	}
 }
 
+//验证服务的心跳处理逻辑
+func GrpcZHealth(srv string) bool {
+	conn, err := grpc.Dial(srv, grpc.WithInsecure())
+	if err != nil {
+		log.Write(log.ERROR, err)
+		return false
+	}
+	defer conn.Close()
+	c      := proto.NewGrpcCoreServiceClient(conn)
+	req    := proto.GrpcHealthRequest{}
+	r, err := c.Health(context.Background(), &req)
+	if err != nil || r.Code != 0 {
+		return false
+	}
+	return true
+}
+
 //启动Grpc 服务
 func (g *GRPCServiceSrv) Start(port int64) error  {
 	addStr := "0.0.0.0:0" //默认随机端口
